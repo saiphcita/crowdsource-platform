@@ -67,6 +67,7 @@
           function error(resp) {
             var data = resp[0];
             self.error = data.detail;
+            $mdToast.showSimple('Could not get last milestone.');
           }
         ).finally(function () {})
       }
@@ -97,6 +98,7 @@
             function error(resp) {
               var data = resp[0];
               self.error = data.detail;
+              $mdToast.showSimple('Could not get categories.');
             }
           ).finally(function () {});
         }
@@ -226,7 +228,7 @@
           for (var i = 0; i < files.length; i++) {
             var file = files[i];
             Upload.upload({
-              url: '/api/requesterinputfile/get-metadata-and-save',
+              url: '/api/csvmanager/get-metadata-and-save',
               fields: {'username': $scope.username},
               file: file,
               headers: {

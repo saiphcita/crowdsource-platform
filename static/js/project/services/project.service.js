@@ -31,7 +31,6 @@
       addProject: addProject,
       addMilestone: addMilestone,
       getCategories: getCategories,
-      getReferenceData: getReferenceData,
       getProjects: getProjects,
       getLastMilestone: getLastMilestone,
       clean: clean,
@@ -63,20 +62,17 @@
               template: [
                 {
                   name: project.template.name,
-                  share_with_others: true,
                   template_items: project.template.items
                 }
               ],
               price: project.payment.wage_per_hit,
-              status: 1,
               repetition: project.payment.number_of_hits || 1,
               number_of_hits: project.payment.number_of_hits,
-              module_timeout: 0,
-              has_data_set: true,
-              is_micro: project.microFlag=='micro',
+              has_data_set: project.metadata ? true: false,
+              is_micro: project.microFlag==='micro',
               is_prototype: true,
-              data_set_location: '',
-              file_id: project.metadata ? project.metadata.id : null
+              file_id: project.metadata ? project.metadata.id : null,
+              task_time: project.taskTime
             }
           ]
         }
@@ -95,19 +91,16 @@
           template: [
             {
               name: project.template.name,
-              share_with_others: true,
               template_items: project.template.items
             }
           ],
           price: project.payment.wage_per_hit,
-          status: 1,
           repetition: project.payment.number_of_hits || 1,
           number_of_hits: project.payment.number_of_hits,
-          module_timeout: 0,
-          has_data_set: true,
-          is_micro: project.microFlag=='micro',
-          is_prototype: false,
-          file_id: project.metadata ? project.metadata.id : null
+          has_data_set: project.metadata ? true: false,
+          is_micro: project.microFlag==='micro',
+          file_id: project.metadata ? project.metadata.id : null,
+          task_time: project.taskTime
         }
       };
       return HttpService.doRequest(settings);
@@ -135,13 +128,6 @@
         method: 'GET'
       };
       return HttpService.doRequest(settings);
-    }
-
-    function getReferenceData() {
-      return $http({
-        url: 'https://api.myjson.com/bins/4ovc8',
-        method: 'GET'
-      });
     }
 
     function getLastMilestone(projectId) {

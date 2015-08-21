@@ -21,6 +21,7 @@
         self.isSelected = isSelected;
         self.selectedItems = [];
         self.updateStatus = updateStatus;
+        self.downloadResults = downloadResults;
         self.sort = sort;
         self.config = {
             order_by: "",
@@ -37,7 +38,7 @@
                     self.module_name = response[0].module_name;
                 },
                 function error(response) {
-
+                    $mdToast.showSimple('Could not get tasks for module.');
                 }
             ).finally(function () {});
         }
@@ -109,6 +110,25 @@
                             }
                         }
                     });
+                },
+                function error(response) {
+
+                }
+            ).finally(function () {});
+        }
+
+        function downloadResults() {
+            var params = {
+                module_id: $routeParams.moduleId
+            };
+            Task.downloadResults(params).then(
+                function success(response) {
+                    var a  = document.createElement('a');
+                    a.href = 'data:text/csv;charset=utf-8,' + response[0].replace(/\n/g, '%0A');
+                    a.target = '_blank';
+                    a.download = self.project_name.replace(/\s/g,'') + '_' + self.module_name.replace(/\s/g,'') + '_data.csv';
+                    document.body.appendChild(a);
+                    a.click();
                 },
                 function error(response) {
 

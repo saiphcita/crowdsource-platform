@@ -230,6 +230,8 @@ class Module(models.Model):
     template = models.ManyToManyField(Template, through='ModuleTemplate')
     is_micro = models.BooleanField(default=True)
     is_prototype = models.BooleanField(default=False)
+    min_rating = models.FloatField(default=3.3)
+
 
 class ModuleCategory(models.Model):
     module = models.ForeignKey(Module)
@@ -262,9 +264,13 @@ class TemplateItem(models.Model):
     type = models.CharField(max_length=16)
     sub_type = models.CharField(max_length=16)
     values = models.TextField(null=True)
+    position = models.IntegerField()
     deleted = models.BooleanField(default=False)
     created_timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
+
+    class Meta:
+        ordering = ['position']
 
 
 class ModuleTemplate(models.Model):
@@ -501,10 +507,8 @@ class RequesterInputFile(models.Model):
 class WorkerRequesterRating(models.Model):
     origin = models.ForeignKey(UserProfile, related_name='rating_origin')
     target = models.ForeignKey(UserProfile, related_name='rating_target')
-    weight = ((1, "BelowExpectations"),
-              (2, 'MetExpectations'),
-              (3, 'ExceedsExpectations'))
-    weight = models.IntegerField(choices=weight,default=2)
+    module = models.ForeignKey(Module, related_name='rating_module')
+    weight = models.FloatField(default=2)
     type = models.CharField(max_length=16)
     created_timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
